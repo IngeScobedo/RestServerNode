@@ -3,20 +3,18 @@ const { UserEncrypted } = require("../helpers/ecrypt");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 
-
 const usersGet = async (req = request, res = response) => {
-  const { limit = 5, since= 0} = req.query;
+  const { limit = 5, since = 0, user_state = true } = req.query;
+  let query = { state: user_state };
 
-  const users = await User.find({state: true})
-  .skip(Number(since))
-  .limit(Number(limit));
-
-  const documents = await User.countDocuments({state: true});
+  let [total, users] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query).skip(Number(since)).limit(Number(limit)),
+  ]);
 
   res.status(200).json({
-    length: users.length,
-    documents,
-    users
+    total,
+    users,
   });
 };
 const usersPost = async (req = request, res = response) => {
@@ -35,22 +33,24 @@ const usersPatch = (req = request, res = response) => {
     msg: "patch API - controller",
   });
 };
-const usersDelete = (req = request, res = response) => {
-  res.status(200).json({
-    msg: "delete API - controller",
-  });
+const usersDelete =  async (req = request, res = response) => {
+  let { id } = req.params;
+
+  let user = await User.findByIdAndUpdate(id, { state: false });
+
+  res.status(200).json(user);
 };
+
 const usersPut = async (req = request, res = response) => {
   const { id } = req.params;
   const { _id, password, google, mail, ...rest } = req.body;
 
   if (password) {
     //Encriptar contraseña
-  const salt = bcrypt.genSaltSync();
-  rest.password = bcrypt.hashSync(password, salt);
+    const salt = bcrypt.genSaltSync();
+    rest.password = bcrypt.hashSync(password, salt);
   }
-const user = await User.findByIdAndUpdate(id, rest
-  )
+  const user = await User.findByIdAndUpdate(id, rest);
   res.status(200).json({
     msg: "put API - controller",
     user,
