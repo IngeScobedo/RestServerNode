@@ -33,12 +33,16 @@ const usersPatch = (req = request, res = response) => {
     msg: "patch API - controller",
   });
 };
-const usersDelete =  async (req = request, res = response) => {
+const usersDelete = async (req = request, res = response) => {
   let { id } = req.params;
+
+
+  let uid = req.uid;
+  let userAuthToken = req.user;
 
   let user = await User.findByIdAndUpdate(id, { state: false });
 
-  res.status(200).json(user);
+  res.status(200).json( user );
 };
 
 const usersPut = async (req = request, res = response) => {
