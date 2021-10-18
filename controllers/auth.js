@@ -38,6 +38,7 @@ const login = async (req = request, res = response) => {
 
     let token = await generator(user.id);
 
+    console.log(user);
     res.status(200).json({
       user,
       token,
@@ -59,7 +60,6 @@ const googleSignIn = async (req = request, res = response) => {
     let user = await User.findOne({ mail });
 
     if (!user) {
-
       //Create user
       const data = {
         name,
@@ -67,7 +67,7 @@ const googleSignIn = async (req = request, res = response) => {
         password: "temporal",
         image,
         google: true,
-        role: 'USER_ROLE'
+        role: "USER_ROLE",
       };
       user = new User(data);
       await user.save();
@@ -90,13 +90,10 @@ const googleSignIn = async (req = request, res = response) => {
       user,
       id_token,
     });
-
-
   } catch (error) {
-      console.log(error);
-      return error;
+    console.log(error);
+    return error;
   }
-
 };
 
 module.exports = {

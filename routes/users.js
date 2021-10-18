@@ -9,42 +9,46 @@ const {
   userError,
 } = require("../controllers/users");
 
+const {
+  isValidRole,
+  isValidEmail,
+  isValidUserByID,
+} = require("../helpers/db-validators");
 
- 
-const { isValidRole, isValidEmail, isValidUserByID } = require("../helpers/db-validators");
+const { 
+  inputValidate, 
+  hasRole, 
+  validatorJWT 
+} = require("../middlewares/");
 
-const { hasRole } = require("../middlewares/hasRole");
-const inputValidate = require("../middlewares/input-validate");
-const { validatorJWT } = require("../middlewares/validatorJWT");
-
-const Role = require("../models/role");
 const router = Router();
 
 router.get("/", usersGet);
 
-
-
-router.put("/:id", [
-  check('id', 'Invalid ID').isMongoId(),
-  check('id').custom(isValidUserByID),
-  check('role').custom(isValidRole),
-  inputValidate
-] ,usersPut);
-
-
+router.put(
+  "/:id",
+  [
+    check("id", "Invalid ID").isMongoId(),
+    check("id").custom(isValidUserByID),
+    check("role").custom(isValidRole),
+    inputValidate,
+  ],
+  usersPut
+);
 
 router.patch("/", usersPatch);
 
-
-router.delete("/:id", [
-  validatorJWT,
-  hasRole('ADMIN_ROLE'),
-  check('id', 'Invalid ID').isMongoId(),
-  check('id').custom(isValidUserByID),
-  inputValidate
-] ,  usersDelete);
-
-
+router.delete(
+  "/:id",
+  [
+    validatorJWT,
+    hasRole("ADMIN_ROLE"),
+    check("id", "Invalid ID").isMongoId(),
+    check("id").custom(isValidUserByID),
+    inputValidate,
+  ],
+  usersDelete
+);
 
 router.post(
   "/",
@@ -60,8 +64,6 @@ router.post(
   ],
   usersPost
 );
-
-
 
 router.get("*", userError);
 

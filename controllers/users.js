@@ -12,6 +12,8 @@ const usersGet = async (req = request, res = response) => {
     User.find(query).skip(Number(since)).limit(Number(limit)),
   ]);
 
+  
+
   res.status(200).json({
     total,
     users,
@@ -35,11 +37,6 @@ const usersPatch = (req = request, res = response) => {
 };
 const usersDelete = async (req = request, res = response) => {
   let { id } = req.params;
-
-
-  let uid = req.uid;
-  let userAuthToken = req.user;
-
   let user = await User.findByIdAndUpdate(id, { state: false });
 
   res.status(200).json( user );
@@ -48,6 +45,7 @@ const usersDelete = async (req = request, res = response) => {
 const usersPut = async (req = request, res = response) => {
   const { id } = req.params;
   const { _id, password, google, mail, ...rest } = req.body;
+  console.log(rest);
 
   if (password) {
     //Encriptar contraseña

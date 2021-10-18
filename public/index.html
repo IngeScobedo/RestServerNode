@@ -27,17 +27,57 @@
 
     <button id="sign-out-button">Sign Out</button>
 
+    <hr />
+
+    <h1>login</h1>
+
+    <form action="">
+      <input type="email" id="mail" name="mail" />
+      <input type="password" id="password" name="password" />
+      <input type="button" id="sendPetition">Send</input>
+    </form>
+
+    <hr />
+
+    <script>
+
+      let mail = getElementById('mail').value,
+      password = getElementById('password').value;
+
+      let button = document.getElementById('sendPetition');
+      button.onclick = ()=>{
+      //   let body = {
+      //     mail,
+      //     password
+      // }
+      // fetch("https://rest-server-svj.herokuapp.com/api/auth/login", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify(body),
+      //   })
+      //     .then((resp) => resp.json())
+      //     .then((resp) => {
+      //       console.log(resp);
+      //     })
+      //     .catch((err) => console.log(err));
+console.log('Presionado');
+    }
+      
+    </script>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script>
       function handleCredentialResponse(response) {
         const body = { id_token: response.credential };
 
-        let url = (window.location.hostname.includes('localhost'))
-                  ? "http://localhost:8081/api/auth/google"
-                  : "https://rest-server-svj.herokuapp.com/api/auth/google";
+        let url = window.location.hostname.includes("localhost")
+          ? "http://localhost:8081/api/auth/google"
+          : "https://rest-server-svj.herokuapp.com/api/auth/google";
 
-        fetch('https://rest-server-svj.herokuapp.com/api/auth/google', {
+        fetch("https://rest-server-svj.herokuapp.com/api/auth/google", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -59,10 +99,10 @@
       button.onclick = () => {
         console.log(google.accounts.id);
         google.accounts.id.disableAutoSelect();
-        google.accounts.id.revoke(localStorage.getItem("email"), done =>{
-            localStorage.clear();
-            location.reload();
-        })
+        google.accounts.id.revoke(localStorage.getItem("email"), (done) => {
+          localStorage.clear();
+          location.reload();
+        });
       };
     </script>
   </body>

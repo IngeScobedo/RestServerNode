@@ -12,6 +12,4 @@ const hasRole = (...roles) => {
 
 };
 
-module.exports = {
-  hasRole,
-};
+module.exports = hasRole;
